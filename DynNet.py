@@ -12,6 +12,26 @@ class InitType(Enum):
 	zero = 2
 
 
+class ActivationType(Enum):
+	sigmoid = 1
+	tangent = 2
+
+
+class Network:
+
+	def __init__(self, n_neurons_for_each_layer, name='unknown', activation=ActivationType.sigmoid, learning_rate=0.001, layer_type=LayerType.dense, init_type=InitType.random):
+		self.layers = []
+		for n_neurons in n_neurons_for_each_layer:
+			if len(self.layers) == 0:
+				self.layers.append(Layer(n_neurons))
+			else:
+				self.layers.append(self.layers[-1].add_layer(n_neurons, layer_type=layer_type, init_type=init_type))
+
+		self.name = name
+		self.activation = activation
+		self.learning_rate = learning_rate
+
+
 class Layer:
 
 	def __init__(self, n_neurons):
@@ -19,7 +39,7 @@ class Layer:
 		for _ in range(n_neurons):
 			self.neurons.append(Neuron())
 
-	def add_layer(self, n_neurons, layer_type, init_type):
+	def add_layer(self, n_neurons, layer_type=LayerType.dense, init_type=InitType.random):
 		new_layer = Layer(n_neurons)
 
 		if layer_type == LayerType.dense:
